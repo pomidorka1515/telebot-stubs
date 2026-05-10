@@ -1,0 +1,13 @@
+from telebot import types as types
+
+class State:
+    name: str
+    group: StatesGroup
+    def __init__(self) -> None: ...
+
+class StatesGroup:
+    def __init_subclass__(cls) -> None: ...
+    @classmethod
+    def state_list(self): ...
+
+def resolve_context(message, bot_id: int) -> tuple: ...
