@@ -1,17 +1,18 @@
 from _typeshed import Incomplete
 from abc import ABC
-from telebot import types as types
+from telebot import types as types, TeleBot
+from telebot.async_telebot import AsyncTeleBot
 from telebot.asyncio_handler_backends import State as State
 from telebot.states import resolve_context as resolve_context
-
+from typing import Any
 
 class SimpleCustomFilter(ABC):
-    key: str | None
-    async def check(self, message: types.Message) -> bool: ...
+    key: str
+    async def check(self, message: types.Message) -> Any: ...
 
 class AdvancedCustomFilter(ABC):
-    key: str | None
-    async def check(self, message: types.Message, text: Any) -> None: ...
+    key: str
+    async def check(self, message: types.Message, text: Any) -> Any: ...
 
 class TextFilter:
     equals: str | None
@@ -44,7 +45,7 @@ class ForwardFilter(SimpleCustomFilter):
 
 class IsReplyFilter(SimpleCustomFilter):
     key: str
-    async def check(self, message: : types.Message | types.CallbackQuery) -> bool: ...
+    async def check(self, message: types.Message | types.CallbackQuery) -> bool: ...
 
 class LanguageFilter(AdvancedCustomFilter):
     key: str
@@ -52,12 +53,12 @@ class LanguageFilter(AdvancedCustomFilter):
 
 class IsAdminFilter(SimpleCustomFilter):
     key: str
-    def __init__(self, bot) -> None: ...
+    def __init__(self, bot: TeleBot | AsyncTeleBot) -> None: ...
     async def check(self, message: types.Message | types.CallbackQuery) -> bool: ...
 
 class StateFilter(AdvancedCustomFilter):
     bot: Incomplete
-    def __init__(self, bot) -> None: ...
+    def __init__(self, bot: TeleBot | AsyncTeleBot) -> None: ...
     key: str
     async def check(self, message: types.Message, text: Any) -> bool: ...
 
