@@ -1,9 +1,9 @@
-from _typeshed import Incomplete
 from watchdog.events import FileSystemEvent as FileSystemEvent, FileSystemEventHandler
+from logging import Logger
 
-logger: Incomplete
+logger: Logger
 
 class EventHandler(FileSystemEventHandler):
-    def on_any_event(self, event: FileSystemEvent): ...
+    def on_any_event(self, event: FileSystemEvent) -> None: ...
 
 def restart_file() -> None: ...
