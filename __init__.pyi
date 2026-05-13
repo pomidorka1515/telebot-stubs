@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from datetime import datetime
-from telebot import apihelper as apihelper, types as types, util as util
+from telebot import apihelper as apihelper, util as util
+import telebot.types as types
 from telebot.custom_filters import AdvancedCustomFilter as AdvancedCustomFilter, SimpleCustomFilter as SimpleCustomFilter
-from telebot.handler_backends import BaseMiddleware as BaseMiddleware, CancelUpdate as CancelUpdate, ContinueHandling as ContinueHandling, FileHandlerBackend as FileHandlerBackend, HandlerBackend as HandlerBackend, MemoryHandlerBackend as MemoryHandlerBackend, SkipHandler as SkipHandler, State as State
+from telebot.handler_backends import BaseMiddleware as BaseMiddleware, CancelUpdate as CancelUpdate, ContinueHandling as ContinueHandling, FileHandlerBackend as FileHandlerBackend, HandlerBackend as HandlerBackend, MemoryHandlerBackend as MemoryHandlerBackend, SkipHandler as SkipHandler
+from telebot.states import State
 from telebot.storage import StateMemoryStorage as StateMemoryStorage, StatePickleStorage as StatePickleStorage, StateStorageBase as StateStorageBase
 from typing import Any, Callable, TypeVar
 
@@ -43,40 +45,40 @@ class TeleBot:
     next_step_backend: HandlerBackend | None
     reply_backend: HandlerBackend | None
     exception_handler: ExceptionHandler | None
-    update_listener: list[Any]
-    message_handlers: list[Any]
-    edited_message_handlers: list[Any]
-    channel_post_handlers: list[Any]
-    edited_channel_post_handlers: list[Any]
-    message_reaction_handlers: list[Any]
-    message_reaction_count_handlers: list[Any]
-    inline_handlers: list[Any]
-    chosen_inline_handlers: list[Any]
-    callback_query_handlers: list[Any]
-    shipping_query_handlers: list[Any]
-    pre_checkout_query_handlers: list[Any]
-    poll_handlers: list[Any]
-    poll_answer_handlers: list[Any]
-    my_chat_member_handlers: list[Any]
-    chat_member_handlers: list[Any]
-    chat_join_request_handlers: list[Any]
-    chat_boost_handlers: list[Any]
-    removed_chat_boost_handlers: list[Any]
-    business_connection_handlers: list[Any]
-    business_message_handlers: list[Any]
-    edited_business_message_handlers: list[Any]
-    deleted_business_messages_handlers: list[Any]
-    purchased_paid_media_handlers: list[Any]
-    managed_bot_handlers: list[Any]
+    update_listener: list[Handler]
+    message_handlers: list[Handler]
+    edited_message_handlers: list[Handler]
+    channel_post_handlers: list[Handler]
+    edited_channel_post_handlers: list[Handler]
+    message_reaction_handlers: list[Handler]
+    message_reaction_count_handlers: list[Handler]
+    inline_handlers: list[Handler]
+    chosen_inline_handlers: list[Handler]
+    callback_query_handlers: list[Handler]
+    shipping_query_handlers: list[Handler]
+    pre_checkout_query_handlers: list[Handler]
+    poll_handlers: list[Handler]
+    poll_answer_handlers: list[Handler]
+    my_chat_member_handlers: list[Handler]
+    chat_member_handlers: list[Handler]
+    chat_join_request_handlers: list[Handler]
+    chat_boost_handlers: list[Handler]
+    removed_chat_boost_handlers: list[Handler]
+    business_connection_handlers: list[Handler]
+    business_message_handlers: list[Handler]
+    edited_business_message_handlers: list[Handler]
+    deleted_business_messages_handlers: list[Handler]
+    purchased_paid_media_handlers: list[Handler]
+    managed_bot_handlers: list[Handler]
     custom_filters: dict[str, Any]
-    state_handlers: list[Any]
+    state_handlers: list[Handler]
     use_class_middlewares: bool | None
-    typed_middleware_handlers: dict[str, list[Any]] | None
-    default_middleware_handlers: list[Any]
+    typed_middleware_handlers: dict[str, list[Handler]] | None
+    default_middleware_handlers: list[Handler]
     middlewares: list[Any] | None
     threaded: bool | None
     worker_pool: util.ThreadPool | None
-    def __init__(self, token: str, parse_mode: str | None = None, threaded: bool | None = True, skip_pending: bool | None = False, num_threads: int | None = 2, next_step_backend: HandlerBackend | None = None, reply_backend: HandlerBackend | None = None, exception_handler: ExceptionHandler | None = None, last_update_id: int | None = 0, suppress_middleware_excepions: bool | None = False, state_storage: StateStorageBase | None = ..., use_class_middlewares: bool | None = False, disable_web_page_preview: bool | None = None, disable_notification: bool | None = None, protect_content: bool | None = None, allow_sending_without_reply: bool | None = None, colorful_logs: bool | None = False, validate_token: bool | None = True) -> None: ...
+    def __init__(self, token: str, parse_mode: str | None = None, threaded: bool | None = True, skip_pending: bool | None = False, num_threads: int | None = 2, next_step_backend: HandlerBackend | None = None, reply_backend: HandlerBackend | None = None, exception_handler: ExceptionHandler | None = None, last_update_id: int | None = 0, suppress_middleware_excepions: bool | None = False, state_storage: StateStorageBase | None = None, use_class_middlewares: bool | None = False, disable_web_page_preview: bool | None = None, disable_notification: bool | None = None, protect_content: bool | None = None, allow_sending_without_reply: bool | None = None, colorful_logs: bool | None = False, validate_token: bool | None = True) -> None: ...
     @property
     def user(self) -> types.User: ...
     def enable_save_next_step_handlers(self, delay: int | None = 120, filename: str | None = './.handler-saves/step.save') -> None: ...
@@ -115,10 +117,10 @@ class TeleBot:
     def process_new_edited_business_message(self, new_edited_business_messages: list[types.Message]) -> None: ...
     def process_new_deleted_business_messages(self, new_deleted_business_messages: list[types.BusinessMessagesDeleted]) -> None: ...
     def process_new_purchased_paid_media(self, new_purchased_paid_media: list[types.PaidMediaPurchased]) -> None: ...
-    def process_new_managed_bot(self, new_managed_bots: list[types.ManagedBotUpdated]) -> None: ...
+    def process_new_managed_bot(self, new_managed_bots: list[Any]) -> None: ...
     def process_middlewares(self, update: types.Update) -> None: ...
-    def infinity_polling(self, timeout: int | None = 20, skip_pending: bool | None = False, long_polling_timeout: int | None = 20, logger_level: int | None = ..., allowed_updates: list[str] | None = None, restart_on_change: bool | None = False, path_to_watch: str | None = None, *args: Any, **kwargs: Any) -> None: ...
-    def polling(self, non_stop: bool | None = False, skip_pending: bool | None = False, interval: int | None = 0, timeout: int | None = 20, long_polling_timeout: int | None = 20, logger_level: int | None = ..., allowed_updates: list[str] | None = None, none_stop: bool | None = None, restart_on_change: bool | None = False, path_to_watch: str | None = None) -> None: ...
+    def infinity_polling(self, timeout: int | None = 20, skip_pending: bool | None = False, long_polling_timeout: int | None = 20, logger_level: int | None = None, allowed_updates: list[str] | None = None, restart_on_change: bool | None = False, path_to_watch: str | None = None, *args: Any, **kwargs: Any) -> None: ...
+    def polling(self, non_stop: bool | None = False, skip_pending: bool | None = False, interval: int | None = 0, timeout: int | None = 20, long_polling_timeout: int | None = 20, logger_level: int | None = None, allowed_updates: list[str] | None = None, none_stop: bool | None = None, restart_on_change: bool | None = False, path_to_watch: str | None = None) -> None: ...
     def stop_polling(self) -> None: ...
     def stop_bot(self) -> None: ...
     def set_update_listener(self, listener: Callable[[list[types.Message]], Any]) -> None: ...
@@ -291,7 +293,7 @@ class TeleBot:
     def get_forum_topic_icon_stickers(self) -> list[types.Sticker]: ...
     def answer_web_app_query(self, web_app_query_id: str, result: types.InlineQueryResultBase) -> types.SentWebAppMessage: ...
     def save_prepared_inline_message(self, user_id: int, result: types.InlineQueryResultBase, allow_user_chats: bool | None = None, allow_bot_chats: bool | None = None, allow_group_chats: bool | None = None, allow_channel_chats: bool | None = None) -> types.PreparedInlineMessage: ...
-    def save_prepared_keyboard_button(self, user_id: int, button: types.KeyboardButton) -> types.PreparedKeyboardButton: ...
+    def save_prepared_keyboard_button(self, user_id: int, button: types.KeyboardButton) -> Any: ... # idk
     def register_for_reply(self, message: types.Message, callback: Callable[..., Any], *args: Any, **kwargs: Any) -> None: ...
     def register_for_reply_by_message_id(self, message_id: int, callback: Callable[..., Any], *args: Any, **kwargs: Any) -> None: ...
     def register_next_step_handler(self, message: types.Message, callback: Callable[..., Any], *args: Any, **kwargs: Any) -> None: ...

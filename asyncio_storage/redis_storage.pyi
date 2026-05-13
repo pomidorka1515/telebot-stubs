@@ -6,6 +6,9 @@ from redis.asyncio.client import Pipeline
 
 redis_installed: bool
 
+# pyright: reportIncompatibleMethodOverride=false
+# mypy: disable-error-code=override
+
 _F = TypeVar("_F", bound=Callable[..., Coroutine[Any, Any, Any]])
 
 def async_with_lock(func: _F) -> _F: ...
