@@ -2,7 +2,6 @@ from _typeshed import Incomplete
 from abc import ABC
 from telebot import types as types, TeleBot
 from telebot.async_telebot import AsyncTeleBot
-from telebot.asyncio_handler_backends import State as State
 from telebot.states import resolve_context as resolve_context
 from typing import Any
 
